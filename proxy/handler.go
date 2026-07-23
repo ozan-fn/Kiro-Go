@@ -1753,7 +1753,7 @@ func (h *Handler) handleOpenAIStream(w http.ResponseWriter, payload *KiroPayload
 				}
 			}
 			data, _ := json.Marshal(chunk)
-			fmt.Fprintf(w, "data: %s\n\n", string(data))
+			fmt.Fprintf(w, "data: %s\n", string(data))
 			flusher.Flush()
 			responseStarted = true
 		}
@@ -1909,12 +1909,12 @@ func (h *Handler) handleOpenAIStream(w http.ResponseWriter, payload *KiroPayload
 					}},
 				}
 				toolCallIndex++
-				data, _ := json.Marshal(chunk)
-				fmt.Fprintf(w, "data: %s\n\n", string(data))
-				flusher.Flush()
-				responseStarted = true
-			},
-			OnComplete: func(inTok, outTok int) {
+			data, _ := json.Marshal(chunk)
+			fmt.Fprintf(w, "data: %s\n", string(data))
+			flusher.Flush()
+			responseStarted = true
+		},
+		OnComplete: func(inTok, outTok int) {
 				inputTokens = inTok
 				outputTokens = outTok
 			},
@@ -1988,9 +1988,9 @@ func (h *Handler) handleOpenAIStream(w http.ResponseWriter, payload *KiroPayload
 				"total_tokens":      inputTokens + outputTokens,
 			},
 		}
-		data, _ := json.Marshal(chunk)
-		fmt.Fprintf(w, "data: %s\n\n", string(data))
-		fmt.Fprintf(w, "data: [DONE]\n\n")
+	data, _ := json.Marshal(chunk)
+	fmt.Fprintf(w, "data: %s\n", string(data))
+	fmt.Fprintf(w, "data: [DONE]\n\n")
 		flusher.Flush()
 		return
 	}

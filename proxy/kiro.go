@@ -31,9 +31,9 @@ type kiroEndpoint struct {
 
 var kiroEndpoints = []kiroEndpoint{
 	{
-		URL:       "https://q.us-east-1.amazonaws.com/generateAssistantResponse",
+		URL:       "https://runtime.us-east-1.kiro.dev/generateAssistantResponse",
 		Origin:    "AI_EDITOR",
-		AmzTarget: "",
+		AmzTarget: "AmazonCodeWhispererStreamingService.GenerateAssistantResponse",
 		Name:      "Kiro IDE",
 	},
 	{
@@ -357,10 +357,10 @@ func CallKiroAPI(account *config.Account, payload *KiroPayload, callback *KiroSt
 		headerValues := buildStreamingHeaderValues(account, host)
 
 		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Accept", "*/*")
-		if ep.AmzTarget != "" {
-			req.Header.Set("X-Amz-Target", ep.AmzTarget)
-		}
+		req.Header.Set("Accept", "application/vnd.amazon.eventstream")
+		req.Header.Set("X-Amz-Target", ep.AmzTarget)
+		req.Header.Set("User-Agent", "AWS-SDK-JS/3.0.0 kiro-ide/1.0.0")
+		req.Header.Set("X-Amz-User-Agent", "aws-sdk-js/3.0 kiro-ide/1.0.0")
 		applyKiroBaseHeaders(req, account, headerValues)
 		req.Header.Set("x-amzn-kiro-agent-mode", "vibe")
 		req.Header.Set("x-amzn-codewhisperer-optout", "true")
